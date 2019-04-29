@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Native_Bayes_.iml" filepath="$PROJECT_DIR$/.idea/Native_Bayes_.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Native_Bayes/.idea/Native_Bayes.iml" filepath="$PROJECT_DIR$/../Native_Bayes/.idea/Native_Bayes.iml" />
     </modules>
   </component>
 </project>

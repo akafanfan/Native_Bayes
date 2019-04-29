@@ -133,11 +133,11 @@ def spamTest():
     classList = []
     fullText = []
     for i in range(1, 26):  # 遍历25个txt文件
-        wordList = textParse(open('a/spam/%d.txt' % i, 'r').read())  # 读取每个垃圾邮件，并字符串转换成字符串列表
+        wordList = textParse(open('email/spam/%d.txt' % i, 'r').read())  # 读取每个垃圾邮件，并字符串转换成字符串列表
         docList.append(wordList)
         fullText.append(wordList)
         classList.append(1)  # 标记垃圾邮件，1表示垃圾文件
-        wordList = textParse(open('a/ham/%d.txt' % i, 'r').read())  # 读取每个非垃圾邮件，并字符串转换成字符串列表
+        wordList = textParse(open('email/ham/%d.txt' % i, 'r').read())  # 读取每个非垃圾邮件，并字符串转换成字符串列表
         docList.append(wordList)
         fullText.append(wordList)
         classList.append(0)  # 标记正常邮件，0表示正常文件
