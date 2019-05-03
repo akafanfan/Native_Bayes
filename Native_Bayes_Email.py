@@ -119,7 +119,7 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
 
 
 def textParse(bigString):  # 将字符串转换为字符列表
-    listOfTokens = re.split(r'\W*', bigString)  # 将特殊符号作为切分标志进行字符串切分，即非字母、非数字
+    listOfTokens = re.split(r'\W', bigString)  # 将特殊符号作为切分标志进行字符串切分，即非字母、非数字
     return [tok.lower() for tok in listOfTokens if len(tok) > 2]  # 除了单个字母，例如大写的I，其它单词变成小写
 
 
@@ -133,13 +133,13 @@ def spamTest():
     classList = []
     fullText = []
     for i in range(1, 26):  # 遍历25个txt文件
-        wordList = textParse(open('email/spam/%d.txt' % i, 'r').read())  # 读取每个垃圾邮件，并字符串转换成字符串列表
+        wordList = textParse(open('email/spam/%d.txt' % i,'r').read())  # 读取每个垃圾邮件，并字符串转换成字符串列表
         docList.append(wordList)
-        fullText.append(wordList)
+        fullText.extend(wordList)
         classList.append(1)  # 标记垃圾邮件，1表示垃圾文件
-        wordList = textParse(open('email/ham/%d.txt' % i, 'r').read())  # 读取每个非垃圾邮件，并字符串转换成字符串列表
+        wordList = textParse(open('email/ham/%d.txt' % i).read())  # 读取每个非垃圾邮件，并字符串转换成字符串列表
         docList.append(wordList)
-        fullText.append(wordList)
+        fullText.extend(wordList)
         classList.append(0)  # 标记正常邮件，0表示正常文件
     vocabList = createVocabList(docList)  # 创建词汇表，不重复
     trainingSet = list(range(50))
@@ -160,7 +160,7 @@ def spamTest():
         if classifyNB(np.array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:  # 如果分类错误
             errorCount += 1  # 错误计数加1
             print("分类错误的测试集：", docList[docIndex])
-    print('错误率：%.2f%%' % (float(errorCount) / len(testSet) * 100))
+    print('错误率：' ,float(errorCount)/len(testSet) )
 
 
 if __name__ == '__main__':
