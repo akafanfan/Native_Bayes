@@ -1,6 +1,7 @@
 import numpy as n
 import re
 import random
+import jieba
 
 def createVocabList(dataSet):
     vocabSet = set([]) #利用set数据类型创建一个空集合
@@ -63,6 +64,13 @@ def classifyNB(vec2Classify,p0Vec,p1Vec,pClass1):
 def textParse(String):  # 将字符串转换为字符列表
     listOfTokens = re.split(r'\W', String)  # 将特殊符号作为切分标志进行字符串切分，即非字母、非数字
     return [tok.lower() for tok in listOfTokens if len(tok) > 2]  # 除了单个字母，例如大写的I，其它单词变成小写
+'''
+Python有个强大的中文处理模块 jieba，它不仅能对中文文本切词，如果碰到英文单词，也会以英文的默认形式切分。
+'''
+def textParseZh(bigString):
+    str = jieba.lcut(bigString)
+    newStr = [re.sub(r'\W*','',s) for s in str]
+    return [tok.lower() for tok in newStr if len(tok) >0]
 
 
 def spamTest():
@@ -72,7 +80,9 @@ def spamTest():
 
     #导入并解析文本文件
     for i in range(1, 26):
-        wordlist = textParse(open('email/ham/%d.txt' % i).read())
+        # wordlist = textParse(open('email/ham/%d.txt' % i).read())
+        wordlist = textParseZh(open('email_zh/ham/%d.txt' % i,encoding='UTF-8').read())
+
         '''
         append() 用于在列表末尾添加新的对象。 
         extend() 用于在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表
@@ -80,7 +90,8 @@ def spamTest():
         docList.append(wordlist)
         fullText.extend(wordlist)
         classList.append(1)
-        wordlist = textParse(open('email/spam/%d.txt' % i).read())
+        # wordlist = textParse(open('email/spam/%d.txt' % i).read())
+        wordlist = textParseZh(open('email_zh/spam/%d.txt' % i,encoding='UTF-8').read())
         docList.append(wordlist)
         fullText.extend(wordlist)
         classList.append(0)
@@ -111,7 +122,7 @@ def spamTest():
         wordVector = setOfWords2Vec(vocabList,docList[i])
         if classifyNB(wordVector,p0V,p1V,pSpam) != classList[i]:
             errorCount += 1
-
+            print("分类错误的测试集：", docList[i])
     rate = float(errorCount)/len(testSet)
     print("the error rate is:",float(errorCount)/len(testSet))
 
