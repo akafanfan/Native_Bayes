@@ -54,7 +54,7 @@ for i in range(1,26):
     fullText.extend(wordlist)
     classList.append(1)
     wordlist = textParse(open('email/spam/%d.txt' % i).read())
-    # wordlist = textParseZh(open('email_zh/spam/%d.txt' % i,encoding='UTF-8').read())
+    # wordlist = textParseZh(open('email_zh/spam/%d.txt' % i,en7coding='UTF-8').read())
     docList.append(wordlist)
     fullText.extend(wordlist)
     classList.append(0)
