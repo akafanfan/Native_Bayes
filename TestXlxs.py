@@ -56,7 +56,7 @@ stopword = codecs.open(os.path.join(FILE_PATH,'stopwords_cn.txt'),'r','UTF-8').r
 
 segmentWords(emailFrame)
 ntxt_head_5= emailFrame.head(10)
-# print(ntxt_head_5)
+print(ntxt_head_5)
 '''
   type                                               text
 0  ham  讲 孔子 后人 故事 一个 老 领导 回到 家乡 儿子 感情 贪财 孙子 孔为 本 和睦 老...
@@ -72,5 +72,3 @@ ntxt_head_5= emailFrame.head(10)
 
 '''
 
-wordList = emailFrame['text'].values.tostring()
-print(wordList)
