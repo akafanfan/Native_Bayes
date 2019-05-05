@@ -33,20 +33,23 @@ def trainNB0(trainMatrix , trainlistClasses):
     p1Num = n.ones(numWords) # 初始化单词列表中单词在侮辱性文档中出现的次数
 
     p0Denom = 2.0   # 正常文档中，词汇表中单词出现的总数
-    p1Denom = 2.0
+    p1Denom = 2.0   # 分母初始化为2 ,拉普拉斯平滑
 
     for i in range(numTrainDocs):     #遍历每篇文档
         if trainlistClasses[i] == 1:#若此篇文档是侮辱性文档
+            # 统计属于侮辱类的条件概率所需的数据，即P(w0|1),P(w1|1),P(w2|1)···
             p1Num += trainMatrix[i]         #若词条在侮辱性文档中出现,则增加该词条的计数值
             p1Denom += sum(trainMatrix[i])  #增加侮辱性文档中出现的词条总数
         else:                       #若此篇文档是非侮辱性文档
+            # 统计属于非侮辱类的条件概率所需的数据，即P(w0|0),P(w1|0),P(w2|0)···
             p0Num += trainMatrix[i]
             p0Denom += sum(trainMatrix[i])
 
-
+    # 取对数，防止下溢出
     p1Vect = n.log(p1Num/p1Denom)  #词汇表中每个单词在侮辱性文档中出现的概率
     p0Vect = n.log(p0Num/p0Denom)  #词汇表中每个单词在正常文档中出现的概率
 
+    # 返回属于正常邮件类的条件概率数组，属于侮辱垃圾邮件类的条件概率数组，文档属于垃圾邮件类的概率
     return p0Vect,p1Vect,pAbusive
 
 def classifyNB(vec2Classify,p0Vec,p1Vec,pClass1):
@@ -73,13 +76,17 @@ def textParseZh(bigString):
     return [tok.lower() for tok in newStr if len(tok) >0]
 
 
+"""
+函数说明:测试朴素贝叶斯分类器，使用朴素贝叶斯进行交叉验证
+"""
 def spamTest():
     docList = []
     classList = []
     fullText = []
 
     #导入并解析文本文件
-    for i in range(1, 26):
+    for i in range(1, 26): # 遍历25个txt文件
+        # 读取每个垃圾邮件，并字符串转换成字符串列表
         # wordlist = textParse(open('email/ham/%d.txt' % i).read())
         wordlist = textParseZh(open('email_zh/ham/%d.txt' % i,encoding='UTF-8').read())
 
@@ -89,47 +96,56 @@ def spamTest():
         '''
         docList.append(wordlist)
         fullText.extend(wordlist)
-        classList.append(1)
+        classList.append(1) # 标记垃圾邮件，1表示垃圾文件
+        # 读取每个非垃圾邮件，并字符串转换成字符串列表
         # wordlist = textParse(open('email/spam/%d.txt' % i).read())
         wordlist = textParseZh(open('email_zh/spam/%d.txt' % i,encoding='UTF-8').read())
         docList.append(wordlist)
         fullText.extend(wordlist)
-        classList.append(0)
+        classList.append(0)# 标记正常邮件，0表示正常文件
 
-    vocabList = createVocabList(docList)
+    vocabList = createVocabList(docList)# 创建词汇表，不重复
     trainingSet =  list(range(50))
-    testSet = []
-    for i in range(10):
-        randIndex = int(random.uniform(0,len(trainingSet)))
+    testSet = [] # 创建存储训练集的索引值的列表和测试集的索引值的列表
+    for i in range(10): # 从50个邮件中，随机挑选出40个作为训练集,10个做测试集
+        randIndex = int(random.uniform(0,len(trainingSet))) # 随机选取索索引值
         testSet.append(trainingSet[randIndex]) #选出文档添加到测试集
         del(trainingSet[randIndex])      #从训练集中剔除
-        '''
-        python3.x , 出现错误 'range' object doesn't support item deletion
-        原因：python3.x   range返回的是range对象，不返回数组对象
-        解决方法：
-        把 trainingSet = range(50) 改为 trainingSet = list(range(50))
-        '''
 
     trainMat = []
-    trainClasses = []
-    for j in trainingSet:
-        trainMat.append(setOfWords2Vec(vocabList,docList[j]))
-        trainClasses.append(classList[j])
-
-    p0V,p1V,pSpam = trainNB0(trainMat,trainClasses)
-    errorCount = 0
-    for i in testSet:
-        wordVector = setOfWords2Vec(vocabList,docList[i])
-        if classifyNB(wordVector,p0V,p1V,pSpam) != classList[i]:
-            errorCount += 1
+    trainClasses = []  # 创建训练集矩阵和训练集类别标签系向量
+    for j in trainingSet:    # 遍历训练集
+        trainMat.append(setOfWords2Vec(vocabList,docList[j]))    # 将生成的词集模型添加到训练矩阵中
+        trainClasses.append(classList[j])   # 将类别添加到训练集类别标签系向量中
+    p0V,p1V,pSpam = trainNB0(trainMat,trainClasses)  # 训练朴素贝叶斯模型
+    errorCount = 0  # 错误分类计数
+    for i in testSet:   # 遍历测试集
+        wordVector = setOfWords2Vec(vocabList,docList[i])   # 测试集的词集模型
+        if classifyNB(wordVector,p0V,p1V,pSpam) != classList[i]:    # 如果分类错误
+            errorCount += 1 # 错误计数加1
             print("分类错误的测试集：", docList[i])
     rate = float(errorCount)/len(testSet)
-    print("the error rate is:",float(errorCount)/len(testSet))
+    # print("错误率:",float(errorCount)/len(testSet))
 
     return rate
 '''
 if __name__ == '__main__':
     spamTest()
 '''
-spamTest()
 
+count = 0.0
+for i in range(1,101):
+    rate = spamTest()
+    print('样本%d错误率:' %i, rate)
+    count = count + rate
+print("-----------------------------------------------------")
+print('项目平均错误率：' ,round( count/100 , 4))
+'''
+问题：
+    python3.x , 出现错误 'range' object doesn't support item deletion
+原因：
+    python3.x   range返回的是range对象，不返回数组对象
+解决方法：
+    把 trainingSet = range(50) 改为 trainingSet = list(range(50))
+        
+'''
