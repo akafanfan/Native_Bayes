@@ -1,0 +1,4 @@
+你好,
+由于您拥有至少一个使用定制欢迎消息、页面或文件的谷歌组，我们写信通知您，从2011年2月开始，我们将不再支持这些功能。我们做出这个决定是为了集中精力改进谷歌组的核心功能——邮件列表和论坛讨论。我们鼓励您使用专门为文件存储和页面创建而设计的产品，如谷歌Docs和谷歌站点，而不是这些特性。
+例如，您可以轻松地在谷歌站点上创建页面，并与组中的成员共享该站点(http://www.google.com/support/sites/bin/answer.py?hl=en&answer=174623)。您还可以通过将文件附加到站点上的页面(http://www.google.com/support/sites/bin/answer.py?hl=en&answer=90563)来在站点上存储文件。如果你只是想找一个地方上传你的文件，让你的小组成员可以下载，我们建议你试试谷歌文档。你可以上传文件(http://docs.google.com/support/bin/answer.py?hl=en&answer=50092)和共享访问一组(http://docs.google.com/support/bin/answer.py?hl=en&answer=66343)或个体(http://docs.google.com/support/bin/answer.py?hl=en&answer=86152),分配编辑或下载只访问文件。
+您已收到此强制性的电子邮件服务公告，以更新您对谷歌组的重要更改。
